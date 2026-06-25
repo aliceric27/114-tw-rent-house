@@ -15,6 +15,7 @@ const MIME_TYPES = {
   ".json": "application/json; charset=utf-8",
   ".md": "text/markdown; charset=utf-8",
   ".pdf": "application/pdf",
+  ".svg": "image/svg+xml",
 };
 
 function send(response, status, body, contentType = "text/plain; charset=utf-8") {
