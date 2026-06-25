@@ -182,9 +182,17 @@ label {
 
 .info-dot:hover .tooltip-panel,
 .info-dot:focus .tooltip-panel,
-.info-dot:focus-within .tooltip-panel {
+.info-dot:focus-within .tooltip-panel,
+.info-dot.is-open .tooltip-panel {
   opacity: 1;
+  pointer-events: auto;
   transform: translateX(-50%) translateY(0);
+}
+
+.info-dot.is-open > .tooltip-panel {
+  opacity: 1 !important;
+  pointer-events: auto;
+  transition: none;
 }
 
 .tooltip-item {
@@ -538,5 +546,29 @@ button:hover {
 
   .inline-field {
     grid-template-columns: 1fr;
+  }
+
+  .tooltip-panel,
+  .metrics .tooltip-panel {
+    position: fixed;
+    top: 72px;
+    right: 12px;
+    bottom: auto;
+    left: 12px;
+    width: auto;
+    max-height: calc(100dvh - 96px);
+    overflow-y: auto;
+    transform: translateY(4px);
+  }
+
+  .info-dot:hover .tooltip-panel,
+  .info-dot:focus .tooltip-panel,
+  .info-dot:focus-within .tooltip-panel,
+  .info-dot.is-open .tooltip-panel {
+    transform: translateY(0);
+  }
+
+  .info-dot.is-open > .tooltip-panel {
+    transform: translateY(0) !important;
   }
 }

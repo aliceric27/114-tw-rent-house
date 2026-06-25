@@ -84,6 +84,16 @@ function setAddressHintHtml(html) {
   elements.addressHint.classList.remove("error");
 }
 
+function closeTooltips() {
+  document.querySelectorAll(".info-dot.is-open").forEach((node) => {
+    node.classList.remove("is-open");
+  });
+
+  if (document.activeElement?.classList?.contains("info-dot")) {
+    document.activeElement.blur();
+  }
+}
+
 function option(label, value = label) {
   const node = document.createElement("option");
   node.value = value;
@@ -524,5 +534,21 @@ elements.roomType.addEventListener("change", () => {
 
 elements.form.addEventListener("input", calculate);
 elements.form.addEventListener("change", calculate);
+
+document.querySelectorAll(".info-dot").forEach((node) => {
+  node.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const shouldOpen = !node.classList.contains("is-open");
+    closeTooltips();
+    node.classList.toggle("is-open", shouldOpen);
+  });
+});
+
+document.addEventListener("click", closeTooltips);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeTooltips();
+  }
+});
 
 init();
