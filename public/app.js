@@ -163,6 +163,18 @@ function updateEquipmentLimit() {
   }
 }
 
+function getSuggestedEquipmentBonus(listing) {
+  const provided = listing.facilities?.provided || [];
+  const coreEquipment = ["冷氣", "熱水器", "冰箱", "洗衣機", "網路"];
+  const coreCount = coreEquipment.filter((item) => provided.includes(item)).length;
+
+  if (coreCount >= 3) {
+    return rentData.adjustments.equipment[elements.roomType.value];
+  }
+
+  return null;
+}
+
 function populateInitialOptions() {
   fillCitySelect("臺北市");
 
@@ -423,9 +435,20 @@ async function apply591Listing(url) {
       missing.push("實際租金");
     }
 
+    if (listing.locationLevel && rentData.adjustments.location.some((item) => item.label === listing.locationLevel)) {
+      elements.locationLevel.value = listing.locationLevel;
+      applied.push("區位");
+    }
+
     if (listing.renovationLevel) {
       elements.renovationLevel.value = listing.renovationLevel;
       applied.push("裝修");
+    }
+
+    const suggestedEquipmentBonus = getSuggestedEquipmentBonus(listing);
+    if (Number.isFinite(suggestedEquipmentBonus)) {
+      elements.equipmentBonus.value = String(suggestedEquipmentBonus);
+      applied.push("設備加值");
     }
 
     if (!Number.isFinite(listing.buildingAge)) {
