@@ -70,6 +70,15 @@ function is591RentUrl(value) {
   }
 }
 
+function isUrlLike(value) {
+  return /^https?:\/\//i.test(value.trim());
+}
+
+function setAddressHint(message, type = "normal") {
+  elements.addressHint.textContent = message;
+  elements.addressHint.classList.toggle("error", type === "error");
+}
+
 function option(label, value = label) {
   const node = document.createElement("option");
   node.value = value;
@@ -203,6 +212,40 @@ function setStatus(className, text) {
   elements.statusBadge.textContent = text;
 }
 
+function setRentComparison(maxRent, contractRent) {
+  const diff = contractRent - maxRent;
+  const absDiff = Math.abs(diff);
+  let className = "fair";
+  let title = "中等";
+  let emoji = "⚖️";
+  let summary = "實際租金接近合理租金";
+  let detail = `差距 ${formatCurrency(absDiff)} 元`;
+
+  if (diff < -2000) {
+    className = "cheap";
+    title = "便宜";
+    emoji = "🟢";
+    summary = "實際租金低於合理租金";
+    detail = `便宜 ${formatCurrency(absDiff)} 元`;
+  } else if (diff > 2000) {
+    className = "expensive";
+    title = "昂貴";
+    emoji = "🔴";
+    summary = "實際租金高於合理租金";
+    detail = `貴 ${formatCurrency(absDiff)} 元`;
+  }
+
+  elements.statusBadge.className = `status comparison ${className}`;
+  elements.statusBadge.innerHTML = `
+    <div class="comparison-title"><span>${emoji}</span><strong>${title} !</strong></div>
+    <dl>
+      <div><dt>合理租金</dt><dd>${formatCurrency(maxRent)}</dd></div>
+      <div><dt>實際租金</dt><dd>${formatCurrency(contractRent)}</dd></div>
+      <div><dt>${summary}</dt><dd>${detail}</dd></div>
+    </dl>
+  `;
+}
+
 function setEmptyResult(message) {
   elements.heroResult.textContent = "-";
   elements.maxRent.textContent = "-";
@@ -273,11 +316,7 @@ function calculate() {
   elements.formulaText.textContent = `${formatCurrency(referencePrice)} × (1 + ${Math.round(location.rate * 100)}% + ${Math.round(renovation.rate * 100)}%) × ${area} 坪 + ${formatCurrency(equipment)} = ${formatCurrency(formulaRent)}，再與收件上限 ${formatCurrency(intakeLimit)} 取低者。`;
 
   if (Number.isFinite(contractRent) && contractRent > 0) {
-    if (contractRent <= maxRent) {
-      setStatus("ok", `實際租金 ${formatCurrency(contractRent)} 元，未超過本次試算上限。`);
-    } else {
-      setStatus("fail", `實際租金 ${formatCurrency(contractRent)} 元，超過本次試算上限 ${formatCurrency(contractRent - maxRent)} 元。`);
-    }
+    setRentComparison(maxRent, contractRent);
   } else if (formulaRent > intakeLimit) {
     setStatus("warn", "公式金額高於縣市收件上限，已採收件上限。");
   } else {
@@ -289,7 +328,7 @@ function applyAddress() {
   const address = normalizeAddress(elements.address.value);
 
   if (!address) {
-    elements.addressHint.textContent = "請輸入地址，或直接手動選擇縣市與行政區。";
+    setAddressHint("請輸入地址，或直接手動選擇縣市與行政區。");
     return;
   }
 
@@ -297,7 +336,7 @@ function applyAddress() {
   const city = cities.find((item) => address.includes(item));
 
   if (!city) {
-    elements.addressHint.textContent = "沒有在地址中找到可辨識的縣市。";
+    setAddressHint("沒有在地址中找到可辨識的縣市。");
     return;
   }
 
@@ -313,10 +352,10 @@ function applyAddress() {
 
   if (district) {
     selectDistrict(district);
-    elements.addressHint.textContent = `已套用 ${city}${district}。`;
+    setAddressHint(`已套用 ${city}${district}。`);
   } else {
     selectDistrict("");
-    elements.addressHint.textContent = `已套用 ${city}，行政區未命中，使用目前選項。`;
+    setAddressHint(`已套用 ${city}，行政區未命中，使用目前選項。`);
   }
 
   calculate();
@@ -326,7 +365,7 @@ async function apply591Listing(url) {
   const originalButtonText = elements.parseAddress.textContent;
   elements.parseAddress.disabled = true;
   elements.parseAddress.textContent = "讀取中";
-  elements.addressHint.textContent = "正在讀取 591 物件資料...";
+  setAddressHint("正在讀取 591 物件資料...");
 
   try {
     const response = await fetch(`/api/591-listing?url=${encodeURIComponent(url)}`);
@@ -392,9 +431,9 @@ async function apply591Listing(url) {
 
     const appliedText = applied.length ? `已套用 ${applied.join("、")}` : "沒有可自動套用的欄位";
     const missingText = missing.length ? `；未自動填入：${missing.join("、")}` : "";
-    elements.addressHint.textContent = `${appliedText}${missingText}。`;
+    setAddressHint(`${appliedText}${missingText}。`);
   } catch (error) {
-    elements.addressHint.textContent = error.message;
+    setAddressHint(error.message, "error");
     setStatus("fail", "591 物件讀取失敗");
   } finally {
     elements.parseAddress.disabled = false;
@@ -410,7 +449,13 @@ async function parseAddress() {
     return;
   }
 
-  applyAddress(value);
+  if (isUrlLike(value)) {
+    setAddressHint('網址格式不支援。請輸入正確格式，例如 "https://rent.591.com.tw/12345"。', "error");
+    setStatus("fail", "591 網址格式錯誤");
+    return;
+  }
+
+  applyAddress();
 }
 
 async function init() {

@@ -30,8 +30,8 @@ body {
   min-width: 320px;
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(231, 241, 236, 0.82), rgba(246, 248, 247, 0) 280px),
-    var(--bg);
+    linear-gradient(180deg, rgba(231, 241, 236, 0.82), rgba(255, 255, 255, 0) 280px),
+    #fff;
   color: var(--text);
 }
 
@@ -44,7 +44,7 @@ select {
 .app-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 32px 0;
+  padding: 32px 0 0;
 }
 
 .hero {
@@ -267,6 +267,11 @@ button:hover {
   line-height: 1.45;
 }
 
+.hint.error {
+  color: var(--danger);
+  font-weight: 800;
+}
+
 .result-panel {
   position: sticky;
   top: 20px;
@@ -319,6 +324,74 @@ button:hover {
 .status.fail {
   background: #fde9e6;
   color: var(--danger);
+}
+
+.status.comparison {
+  border: 1px solid var(--line);
+  padding: 14px;
+}
+
+.status.comparison.cheap {
+  border-color: #b8dfc9;
+  background: #e8f6ee;
+  color: #0f5d3f;
+}
+
+.status.comparison.fair {
+  border-color: #ead7a7;
+  background: #fff7e3;
+  color: #856116;
+}
+
+.status.comparison.expensive {
+  border-color: #efc1bc;
+  background: #fdebea;
+  color: #9c312a;
+}
+
+.comparison-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 1.04rem;
+}
+
+.comparison-title span {
+  font-size: 1.24rem;
+  line-height: 1;
+}
+
+.comparison-title strong {
+  font-size: 1.1rem;
+}
+
+.status.comparison dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.status.comparison dl div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.status.comparison dt {
+  color: currentColor;
+  font-size: 0.84rem;
+  font-weight: 800;
+  opacity: 0.78;
+}
+
+.status.comparison dd {
+  margin: 0;
+  color: currentColor;
+  font-size: 1rem;
+  font-weight: 900;
+  text-align: right;
 }
 
 .metrics {
@@ -384,10 +457,51 @@ button:hover {
   line-height: 1.65;
 }
 
+.site-footer {
+  margin-top: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(25, 116, 92, 0.1), rgba(255, 255, 255, 0) 42%),
+    var(--surface);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+
+.site-footer div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.site-footer strong {
+  color: var(--accent-dark);
+  font-size: 1rem;
+}
+
+.site-footer span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--accent-dark);
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.site-footer p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
 @media (max-width: 860px) {
   .app-shell {
     width: min(100% - 24px, 680px);
-    padding: 22px 0;
+    padding: 22px 0 0;
   }
 
   .hero {
