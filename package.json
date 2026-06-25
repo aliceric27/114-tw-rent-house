@@ -1,0 +1,8 @@
+{
+  "name": "114-rent-calculator",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/convert-rent-data.js",
+    "dev": "node scripts/static-server.js 5173"
+  }
+}

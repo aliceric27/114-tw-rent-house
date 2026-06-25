@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>社宅包租代管租金試算</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">2025 年 12 月中央版</p>
+          <h1>社宅包租代管租金試算</h1>
+        </div>
+        <div class="hero-meta">
+          <span>元 / 月</span>
+          <strong id="heroResult">-</strong>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <form id="calculatorForm" class="panel input-panel">
+          <div class="field wide">
+            <label for="address">地址或 591 網站</label>
+            <div class="inline-field">
+              <input id="address" type="text" placeholder="例：臺北市大安區信義路三段" autocomplete="street-address" />
+              <button id="parseAddress" type="button">套用</button>
+            </div>
+            <p id="addressHint" class="hint">可輸入地址自動帶入縣市與行政區，或直接手動選擇。</p>
+          </div>
+
+          <div class="field">
+            <label for="city">縣市</label>
+            <select id="city" required></select>
+          </div>
+
+          <div class="field">
+            <label for="district">行政區</label>
+            <select id="district" required></select>
+          </div>
+
+          <div class="field">
+            <label for="roomType">房型</label>
+            <select id="roomType" required></select>
+          </div>
+
+          <div class="field">
+            <label for="buildingAge">屋齡(年)</label>
+            <input id="buildingAge" type="number" min="0" max="120" step="1" value="10" required />
+          </div>
+
+          <div class="field">
+            <label for="area">坪數</label>
+            <input id="area" type="number" min="0.1" max="500" step="0.1" value="20" required />
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="locationLevel">區位</label>
+              <span class="info-dot" tabindex="0" aria-label="區位選項說明">
+                !
+                <span id="locationTooltip" class="tooltip-panel" role="tooltip"></span>
+              </span>
+            </div>
+            <select id="locationLevel" required></select>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="renovationLevel">裝修</label>
+              <span class="info-dot" tabindex="0" aria-label="裝修選項說明">
+                !
+                <span id="renovationTooltip" class="tooltip-panel" role="tooltip"></span>
+              </span>
+            </div>
+            <select id="renovationLevel" required></select>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="equipmentBonus">設備加值</label>
+              <span class="info-dot" tabindex="0" aria-label="設備加值說明">
+                !
+                <span id="equipmentTooltip" class="tooltip-panel" role="tooltip"></span>
+              </span>
+            </div>
+            <input id="equipmentBonus" type="number" min="0" step="100" value="0" required />
+            <p id="equipmentHint" class="hint"></p>
+          </div>
+
+          <div class="field">
+            <label for="contractRent">實際簽約租金</label>
+            <input id="contractRent" type="number" min="0" step="100" placeholder="可不填" />
+          </div>
+        </form>
+
+        <aside class="panel result-panel" aria-live="polite">
+          <div class="result-header">
+            <span>合理租金上限</span>
+            <strong id="maxRent">-</strong>
+          </div>
+
+          <div id="statusBadge" class="status neutral">等待資料</div>
+
+          <dl class="metrics">
+            <div>
+              <dt>參考單價</dt>
+              <dd id="referencePrice">-</dd>
+            </div>
+            <div>
+              <dt>調整後單價</dt>
+              <dd id="adjustedPrice">-</dd>
+            </div>
+            <div>
+              <dt>
+                <span>公式試算</span>
+                <span class="info-dot metric-info" tabindex="0" aria-label="公式試算說明">
+                  !
+                  <span id="formulaTooltip" class="tooltip-panel" role="tooltip"></span>
+                </span>
+              </dt>
+              <dd id="formulaRent">-</dd>
+            </div>
+            <div>
+              <dt>
+                <span>收件上限</span>
+                <span class="info-dot metric-info" tabindex="0" aria-label="收件上限說明">
+                  !
+                  <span id="intakeTooltip" class="tooltip-panel" role="tooltip"></span>
+                </span>
+              </dt>
+              <dd id="intakeLimit">-</dd>
+            </div>
+          </dl>
+
+          <div class="formula">
+            <span>計算式</span>
+            <p id="formulaText">請先選擇資料。</p>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
