@@ -1,4 +1,4 @@
-const TAIWAN_CITIES = [
+const SUPPORTED_CITIES = [
   "臺北市",
   "新北市",
   "桃園市",
@@ -19,6 +19,9 @@ const TAIWAN_CITIES = [
   "花蓮縣",
   "臺東縣",
 ];
+
+const UNSUPPORTED_CITIES = ["金門縣", "澎湖縣", "連江縣"];
+const TAIWAN_CITIES = [...SUPPORTED_CITIES, ...UNSUPPORTED_CITIES];
 
 export function normalizeTaiwanText(value) {
   return String(value || "").replace(/台/g, "臺").trim();
@@ -204,5 +207,13 @@ export async function fetch591Listing(target, fetchImpl = fetch) {
     throw error;
   }
 
-  return parse591Listing(await result.text(), target);
+  const listing = parse591Listing(await result.text(), target);
+
+  if (UNSUPPORTED_CITIES.includes(listing.city)) {
+    const error = new Error(`目前租金水準區間表未提供${listing.city}資料，無法試算。請改用表內縣市物件。`);
+    error.status = 422;
+    throw error;
+  }
+
+  return listing;
 }

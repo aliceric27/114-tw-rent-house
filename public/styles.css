@@ -29,9 +29,7 @@
 body {
   min-width: 320px;
   margin: 0;
-  background:
-    linear-gradient(180deg, rgba(231, 241, 236, 0.82), rgba(255, 255, 255, 0) 280px),
-    #fff;
+  background: #fff;
   color: var(--text);
 }
 
@@ -270,6 +268,16 @@ button:hover {
 .hint.error {
   color: var(--danger);
   font-weight: 800;
+}
+
+.hint .missing {
+  color: var(--danger);
+  font-weight: 900;
+}
+
+.hint .applied {
+  color: var(--accent-dark);
+  font-weight: 900;
 }
 
 .result-panel {

@@ -79,6 +79,11 @@ function setAddressHint(message, type = "normal") {
   elements.addressHint.classList.toggle("error", type === "error");
 }
 
+function setAddressHintHtml(html) {
+  elements.addressHint.innerHTML = html;
+  elements.addressHint.classList.remove("error");
+}
+
 function option(label, value = label) {
   const node = document.createElement("option");
   node.value = value;
@@ -429,12 +434,12 @@ async function apply591Listing(url) {
 
     calculate();
 
-    const appliedText = applied.length ? `已套用 ${applied.join("、")}` : "沒有可自動套用的欄位";
-    const missingText = missing.length ? `；未自動填入：${missing.join("、")}` : "";
-    setAddressHint(`${appliedText}${missingText}。`);
+    const appliedText = applied.length ? `<span class="applied">已套用 ${applied.join("、")}</span>` : "沒有可自動套用的欄位";
+    const missingText = missing.length ? `；<span class="missing">未自動填入：${missing.join("、")}</span>` : "";
+    setAddressHintHtml(`${appliedText}${missingText}。`);
   } catch (error) {
     setAddressHint(error.message, "error");
-    setStatus("fail", "591 物件讀取失敗");
+    setStatus("fail", error.message);
   } finally {
     elements.parseAddress.disabled = false;
     elements.parseAddress.textContent = originalButtonText;
@@ -450,7 +455,7 @@ async function parseAddress() {
   }
 
   if (isUrlLike(value)) {
-    setAddressHint('網址格式不支援。請輸入正確格式，例如 "https://rent.591.com.tw/12345"。', "error");
+    setAddressHint('網址格式不支援。請輸入正確格式，例如 https://rent.591.com.tw/12345。', "error");
     setStatus("fail", "591 網址格式錯誤");
     return;
   }
