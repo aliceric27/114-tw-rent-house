@@ -221,6 +221,15 @@ function mergeRentTable(rentTables, parsedTable) {
 }
 
 function main() {
+  if (!fs.existsSync(SOURCE_PATH)) {
+    if (fs.existsSync(OUTPUT_PATH)) {
+      console.log(`Source ${SOURCE_PATH} not found; keeping existing ${OUTPUT_PATH}`);
+      return;
+    }
+
+    throw new Error(`Source ${SOURCE_PATH} not found and ${OUTPUT_PATH} does not exist.`);
+  }
+
   const source = fs.readFileSync(SOURCE_PATH, "utf8").replace(/\r\n/g, "\n");
   const tables = tableTitleMatches(source);
 

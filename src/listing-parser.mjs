@@ -103,13 +103,16 @@ function extract591VisibleAddress(html) {
 
 function extractCityDistrict(text) {
   const normalized = normalizeTaiwanText(text);
-  const city = TAIWAN_CITIES.find((item) => normalized.includes(item));
+  const cityMatch = TAIWAN_CITIES.map((item) => ({ name: item, index: normalized.indexOf(item) }))
+    .filter((item) => item.index >= 0)
+    .sort((a, b) => a.index - b.index)[0];
+  const city = cityMatch?.name || "";
 
   if (!city) {
     return { city: "", district: "" };
   }
 
-  const afterCity = normalized.slice(normalized.indexOf(city) + city.length);
+  const afterCity = normalized.slice(cityMatch.index + city.length);
   const district = afterCity.match(/^(.{1,4}?[區鄉鎮市])/u)?.[1] || "";
 
   return { city, district };

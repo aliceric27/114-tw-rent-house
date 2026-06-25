@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "node scripts/convert-rent-data.js",
-    "dev": "node scripts/static-server.js 5173"
+    "dev": "node scripts/static-server.js 5173",
+    "deploy": "wrangler deploy"
   }
 }

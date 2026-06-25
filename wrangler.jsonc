@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "114-tw-rent-house",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-06-25",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  }
+}
